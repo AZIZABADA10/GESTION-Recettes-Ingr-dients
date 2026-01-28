@@ -12,7 +12,12 @@ class RecetteController extends Controller
      */
     public function index()
     {
-        //
+        $recettes = Recette::with([
+        'commentaires',
+        'categorie',
+        'ingredients',
+        'etapes'])->get();
+        return view('recettes.index',compact('recettes'));
     }
 
     /**
@@ -34,7 +39,7 @@ class RecetteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Recette $recette)
+    public function show(string $id)
     {
         //
     }
@@ -42,7 +47,7 @@ class RecetteController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Recette $recette)
+    public function edit(string $id)
     {
         //
     }
@@ -50,7 +55,7 @@ class RecetteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Recette $recette)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -58,7 +63,7 @@ class RecetteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Recette $recette)
+    public function destroy(string $id)
     {
         //
     }
