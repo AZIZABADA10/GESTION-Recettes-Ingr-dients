@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RecetteController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,3 +10,4 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::resource('recettes', RecetteController::class);
+Route::get('/register',[AuthController::class,'registerForm']);
