@@ -19,18 +19,20 @@ class Recette extends Model
         return $this->belongsTo(Categorie::class);
     }
 
-    public function ingredients() 
+    public function ingredients()
     {
-        return $this->belongsToMany(Ingredient::class)->withPivot('quantite');
+        return $this->belongsToMany(Ingredient::class, 'recette_ingredient')
+                    ->withPivot('quantite');
     }
 
-    public function Etapes()
+    public function etapes()
     {
         return $this->hasMany(EtapePreparation::class);
     }
 
-    public function Commentaire()
+    public function commentaires()
     {
         return $this->hasMany(Commentaire::class);
     }
 }
+
