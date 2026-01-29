@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\RecetteController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,7 @@ Route::middleware('guest')->group(function(){
 
 Route::middleware('auth')->group(function(){
     Route::resource('recettes', RecetteController::class);
+        Route::resource('categories', CategorieController::class);
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
