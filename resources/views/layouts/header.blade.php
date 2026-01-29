@@ -20,6 +20,11 @@
                     <i class="fas fa-home mr-2"></i>
                     Recettes
                 </a>
+
+                <a href="{{ route('categories.index') }}" class="flex items-center text-gray-700 hover:text-orange-500 font-medium transition-colors">
+                    <i class="fas fa-folder-open mr-2"></i>
+                    Catégories
+                </a>
                 
                 @auth
                     <a href="{{ route('recettes.create') }}" class="flex items-center bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all hover:-translate-y-0.5">
@@ -65,6 +70,11 @@
             <a href="{{ route('recettes.index') }}" class="flex items-center text-gray-700 hover:text-orange-500 font-medium py-2 transition-colors">
                 <i class="fas fa-home mr-3 w-5"></i>
                 Recettes
+            </a>
+
+            <a href="{{ route('categories.index') }}" class="flex items-center text-gray-700 hover:text-orange-500 font-medium py-2 transition-colors">
+                <i class="fas fa-folder-open mr-3 w-5"></i>
+                Catégories
             </a>
             
             @auth
