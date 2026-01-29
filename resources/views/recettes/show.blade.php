@@ -108,7 +108,7 @@
                     @if($recette->image)
                         <div class="relative h-96 overflow-hidden">
                             <img 
-                                src="{{ asset('storage/' . $recette->image) }}" 
+                                src="{{ asset('images/' . $recette->image) }}" 
                                 alt="{{ $recette->titre }}"
                                 class="w-full h-full object-cover"
                             >
