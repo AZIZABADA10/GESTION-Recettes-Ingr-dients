@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categorie;
+use App\Models\EtapePreparation;
+use App\Models\Ingredient;
 use App\Models\Recette;
 use Illuminate\Http\Request;
 
@@ -13,11 +15,7 @@ class RecetteController extends Controller
      */
     public function index()
     {
-        $recettes = Recette::with([
-        'commentaires',
-        'categorie',
-        'ingredients',
-        'etapes'])->get();
+        $recettes = Recette::all();
         return view('recettes.index',compact('recettes'));
     }
 
@@ -36,22 +34,45 @@ class RecetteController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-        'titre' => 'required|min:4',
-        'description'=>'required',
-        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
-        'user_id'=>'required|exists:users,id',
-        'categorie_id'=>'required|exists:categories,id'
+            'titre'=>'required|string|min:5',
+            'categorie_id'=>'required|exists:categories,id',
+            'description'=>'required|string',
+            'ingredients.*titre'=>'required|string',
+            'ingredients.*quantite'=>'required',
+            'etapes.*titre'=>'required',
+            'image'=>'required|mimes:jpeg,png,svg,jpg',
+            'user_id'=>'required|exists:users,id'
         ]);
+        
+        if ($request->hasFile('image')) {
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move(public_path('images'),$imageName);
+        };
 
         $recette = Recette::create([
-            'titre' => $request->titre,
+            'titre'=>$request->titre,
+            'categorie_id'=>$request->categorie_id,
             'description'=>$request->description,
-            'image' => $request->image,
             'user_id'=>$request->user_id,
-            'categorie_id'=>$request->categorie_id]
-        );
-        return redirect()->route('recettes.index');
+            'image'=>$request->image,
+        ]);
+
+      foreach ($request->ingredients as $value) {
+        $ingredient = Ingredient::FirstOrCreate(['titre'=>$value['titre']]);
+        $recette->ingredients()->attach($ingredient->id,['quantite'=>$value['quantite']]);
+      }
+
+
+      foreach ($request->etapes as $index => $value) {
+        $recette->etapes()->create([
+            'titre'=>$value['titre'],
+            'ordre'=> $index+1
+        ]);
+      }
+
+      return redirect()->route('recettes.index')->with('succese','recette a été bien créer !');
     }
+
 
     /**
      * Display the specified resource.
