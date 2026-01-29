@@ -108,8 +108,8 @@
                     </p>
                 </div>
 
-                <!-- Filtres ou actions -->
-                <!-- <div class="mt-4 md:mt-0 flex items-center space-x-3">
+                 Filtres ou actions
+                 <div class="mt-4 md:mt-0 flex items-center space-x-3">
                     <button class="bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition flex items-center space-x-2">
                         <i class="fas fa-filter text-orange-500"></i>
                         <span class="text-gray-700 font-medium">Filtrer</span>
@@ -118,7 +118,7 @@
                         <i class="fas fa-sort text-orange-500"></i>
                         <span class="text-gray-700 font-medium">Trier</span>
                     </button>
-                </div> -->
+                </div> 
             </div>
         </div>
 
@@ -156,7 +156,7 @@
                         <div class="relative h-56 overflow-hidden">
                             @if($recette->image)
                                 <img 
-                                    src="{{ asset('storage/' . $recette->image) }}" 
+                                    src="{{ asset('images/' . $recette->image) }}" 
                                     alt="{{ $recette->titre }}"
                                     class="w-full h-full object-cover"
                                 >
@@ -187,7 +187,7 @@
 
                             <!-- Description -->
                             <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                                {{ \Illuminate\Support\Str::limit($recette->description, 100) }}
+                                {{ \Illuminate\Support\Str::limit($recette->description, 16) }}
                             </p>
 
                             <!-- Séparateur -->
@@ -203,7 +203,7 @@
                                     </div>
                                     <div class="flex items-center space-x-1" title="Vues">
                                         <i class="fas fa-eye text-orange-500"></i>
-                                        <span class="font-medium">{{ rand(50, 500) }}</span>
+                                        <span class="font-medium">{{ rand(0, 999) }}</span>
                                     </div>
                                 </div>
 
