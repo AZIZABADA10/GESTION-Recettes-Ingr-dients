@@ -196,6 +196,28 @@
                             </p>
                         @enderror
                     </div>
+                    <div id="ingredients-container" class="space-y-4">
+                    <label class="block font-semibold text-gray-700">Ingrédients</label>
+                    <div class="ingredient-row flex gap-2">
+                        <input type="text" name="ingredients[0][titre]" placeholder="Farine" class="border rounded p-2 flex-1">
+                        <input type="text" name="ingredients[0][quantite]" placeholder="200g" class="border rounded p-2 flex-1">
+                        <button type="button" onclick="removeRow(this)">❌</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addIngredient()"  class="mt-2 px-4 py-2 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition">+ Ajouter un ingrédient</button>
+                    <div id="etapes-container" class="space-y-4">
+                        <label class="block font-semibold text-gray-700">Étapes de préparation</label>
+                        <div class="etape-row flex gap-2 items-center mt-2">
+                            <input type="text" name="etapes[0][titre]" placeholder="Titre de l'étape" class="border rounded-xl p-2 flex-1" required>
+                            <input type="number" name="etapes[0][order]" placeholder="Ordre" class="border rounded-xl p-2 w-24" min="1" required>
+                            <button type="button" onclick="removeEtape(this)" class="text-red-500 font-bold">❌</button>
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="addEtape()" class="mt-2 px-4 py-2 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition">
+                        + Ajouter une étape
+                    </button>
+
 
                     <!-- Image -->
                     <div>
@@ -298,6 +320,46 @@
                 }
                 reader.readAsDataURL(file);
             }
+        }
+
+
+        let etapeIndex = 1;
+        function addEtape() {
+            const container = document.getElementById('etapes-container');
+
+            const row = document.createElement('div');
+            row.className = 'etape-row flex gap-2 items-center mt-2';
+            row.innerHTML = `
+                <input type="text" name="etapes[${etapeIndex}][titre]" placeholder="Titre de l'étape" class="border rounded-xl p-2 flex-1" required>
+                <input type="number" name="etapes[${etapeIndex}][order]" placeholder="Ordre" class="border rounded-xl p-2 w-24" min="1" required>
+                <button type="button" onclick="removeEtape(this)" class="text-red-500 font-bold">❌</button>
+            `;
+
+            container.appendChild(row);
+            etapeIndex++;
+        }
+
+        function removeEtape(button) {
+            button.parentElement.remove();
+        }
+
+
+        let ingredientIndex = 1;
+        function addIngredient() {
+            const container = document.getElementById('ingredients-container');
+            const row = document.createElement('div');
+            row.className = 'ingredient-row flex gap-2';
+            row.innerHTML = `
+                <input type="text" name="ingredients[${ingredientIndex}][titre]" placeholder="Ingrédient" class="border rounded p-2 flex-1">
+                <input type="text" name="ingredients[${ingredientIndex}][quantite]" placeholder="Quantité" class="border rounded p-2 flex-1">
+                <button type="button" onclick="removeRow(this)">❌</button>
+            `;
+            container.appendChild(row);
+            ingredientIndex++;
+        }
+
+        function removeRow(button) {
+            button.parentElement.remove();
         }
     </script>
 
