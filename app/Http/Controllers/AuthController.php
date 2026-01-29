@@ -24,14 +24,15 @@ class AuthController extends Controller
                 'password' => 'required|min:6'
             ]
         );
+
         $user = User::create([
             'name' => $request->name,
-            'email' => $request->name,
-            'password' => Hash::make($request->name)
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
         ]);
 
         Auth::login($user);
-        return redirect('/dashboard');
+        return redirect('/recettes');
     }
 
     public function loginForm()
@@ -48,7 +49,7 @@ class AuthController extends Controller
 
        if (Auth::attempt($info_connexion)) {
         $request->session()->regenerate();
-        return redirect('/dashboard');
+        return redirect('/recettes');
        }else{
         return back()->withErrors([
             'email' => 'Identifiants incorrects'
