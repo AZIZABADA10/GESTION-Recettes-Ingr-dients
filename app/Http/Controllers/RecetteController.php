@@ -25,7 +25,7 @@ class RecetteController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
