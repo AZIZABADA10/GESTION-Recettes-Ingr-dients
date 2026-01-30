@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\RecetteController;
+use App\Http\Controllers\CommentaireController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,8 +25,16 @@ Route::middleware('guest')->group(function(){
 });
 
 Route::middleware('auth')->group(function(){
+    Route::resource('categories', CategorieController::class);
+    Route::post('/commentaires', [CommentaireController::class, 'store'])->name('commentaires.store');
+    Route::put('/commentaires/{id}', [CommentaireController::class, 'update'])->name('commentaires.update');
+    Route::delete('/commentaires/{id}', [CommentaireController::class, 'destroy'])->name('commentaires.destroy');
+    Route::get('/recettes/search', [RecetteController::class, 'search'])->name('recettes.search');
     Route::resource('recettes', RecetteController::class);
-        Route::resource('categories', CategorieController::class);
+
+
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
