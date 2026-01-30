@@ -144,7 +144,7 @@
 </div>
 
 <script>
-let ingredientIndex = {{ $recette->ingredients->count() }};
+let ingredientIndex =<?php $recette->ingredients->count() ?>;
 let etapeIndex = {{ $recette->etapes->count() }};
 
 function addIngredient() {
