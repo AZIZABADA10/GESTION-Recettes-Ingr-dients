@@ -16,9 +16,28 @@ class RecetteController extends Controller
     public function index()
     {
         $recettes = Recette::all();
-        return view('recettes.index',compact('recettes'));
-    }
 
+        $categories = Categorie::all();
+        return view('recettes.index',compact('recettes','categories'));
+    }
+    public function search(Request $request)
+    {
+        $query = Recette::with(['categorie', 'commentaires', 'user']);
+
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request){
+                $q->where('titre','like','%'.$request->search . '%')
+                ->orWhere('description', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        if ($request->filled('categorie')) {
+            $query->where('categorie_id',$request->categorie);
+        }
+
+        $recettes = $query->get();
+        return view('recettes.partials.cards', compact('recettes'))->render();
+    }
     /**
      * Show the form for creating a new resource.
      */
