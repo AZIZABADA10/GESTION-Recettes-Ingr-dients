@@ -110,7 +110,103 @@
                     @endforeach
                 </div>
             </div>
+            <!-- COMMENTAIRES -->
+            <div class="mt-12 bg-white rounded-3xl shadow-xl p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-comments text-orange-500 mr-2"></i>
+                    Commentaires ({{ $recette->commentaires->count() }})
+                </h2>
 
+                <!-- AJOUTER COMMENTAIRE -->
+                @auth
+                    <form action="{{ route('commentaires.store') }}" method="POST" class="mb-8">
+                        @csrf
+
+                        <input type="hidden" name="recette_id" value="{{ $recette->id }}">
+
+                        <textarea name="content"
+                                rows="3"
+                                required
+                                class="w-full border-2 rounded-xl px-4 py-3 focus:border-orange-500 focus:ring-orange-200"
+                                placeholder="Ajouter un commentaire...">{{ old('content') }}</textarea>
+
+                        @error('content')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+
+                        <div class="text-right mt-3">
+                            <button type="submit"
+                                    class="bg-orange-500 text-white px-6 py-2 rounded-xl font-semibold hover:bg-orange-600">
+                                <i class="fas fa-paper-plane mr-1"></i> Publier
+                            </button>
+                        </div>
+                    </form>
+                @endauth
+
+                <!-- LISTE DES COMMENTAIRES -->
+                <div class="space-y-4">
+                    @foreach($recette->commentaires as $commentaire)
+                        <div class="bg-gray-50 p-5 rounded-xl">
+
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="font-semibold text-gray-800">
+                                        {{ $commentaire->user->name }}
+                                    </p>
+                                    <p class="text-xs text-gray-500">
+                                        {{ $commentaire->created_at->diffForHumans() }}
+                                    </p>
+                                </div>
+
+                                @auth
+                                    @if($commentaire->user_id === auth()->id())
+                                        <form action="{{ route('commentaires.destroy', $commentaire->id) }}"
+                                            method="POST"
+                                            onsubmit="return confirm('Supprimer ce commentaire ?');">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit"
+                                                    class="text-red-500 hover:text-red-600">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                @endauth
+                            </div>
+
+                            <!-- CONTENU / MODIFICATION -->
+                            @auth
+                                @if($commentaire->user_id === auth()->id())
+                                    <form action="{{ route('commentaires.update', $commentaire->id) }}"
+                                        method="POST"
+                                        class="mt-3">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <textarea name="content"
+                                                rows="2"
+                                                required
+                                                class="w-full border-2 rounded-xl px-3 py-2">{{ $commentaire->content }}</textarea>
+
+                                        <div class="text-right mt-2">
+                                            <button type="submit"
+                                                    class="text-orange-600 font-semibold text-sm">
+                                                <i class="fas fa-save mr-1"></i> Modifier
+                                            </button>
+                                        </div>
+                                    </form>
+                                @else
+                                    <p class="mt-3 text-gray-700">
+                                        {{ $commentaire->content }}
+                                    </p>
+                                @endif
+                            @endauth
+
+                        </div>
+                    @endforeach
+                </div>
+            </div>
             <!-- Actions -->
             @auth
                 @if(auth()->id() === $recette->user_id)
