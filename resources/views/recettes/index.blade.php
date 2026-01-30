@@ -94,7 +94,40 @@
     @include('layouts.header')
 
     <div class="container mx-auto px-4 py-10">
-        
+                        <form id="search-form"
+                    class="bg-white rounded-2xl shadow-lg p-6 mb-10 animate-fade-in">
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <i class="fas fa-search text-orange-500 mr-1"></i>
+                                Rechercher
+                            </label>
+                            <input type="text"
+                                name="search"
+                                placeholder="Titre ou description..."
+                                class="w-full border-2 border-gray-200 rounded-xl px-4 py-2 focus:border-orange-500 focus:ring-orange-500 outline-none transition">
+                        </div>
+
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <i class="fas fa-tag text-orange-500 mr-1"></i>
+                                Catégorie
+                            </label>
+                            <select name="categorie"
+                                    class="w-full border-2 border-gray-200 rounded-xl px-4 py-2 focus:border-orange-500 focus:ring-orange-500 outline-none transition">
+                                <option value="">Toutes</option>
+                                @foreach($categories as $categorie)
+                                    <option value="{{ $categorie->id }}">
+                                        {{ $categorie->titre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </form>
         <!-- En-tête de la section -->
         <div class="mb-10 animate-fade-in">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -108,17 +141,9 @@
                     </p>
                 </div>
 
-                 Filtres ou actions
-                 <div class="mt-4 md:mt-0 flex items-center space-x-3">
-                    <button class="bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition flex items-center space-x-2">
-                        <i class="fas fa-filter text-orange-500"></i>
-                        <span class="text-gray-700 font-medium">Filtrer</span>
-                    </button>
-                    <button class="bg-white px-4 py-2 rounded-lg shadow hover:shadow-md transition flex items-center space-x-2">
-                        <i class="fas fa-sort text-orange-500"></i>
-                        <span class="text-gray-700 font-medium">Trier</span>
-                    </button>
-                </div> 
+                 <!-- Formulaire de filtrage AJAX -->
+
+
             </div>
         </div>
 
@@ -148,88 +173,13 @@
             </div>
         @else
             <!-- Grille de recettes -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                @foreach($recettes as $index => $recette)
-                    <div class="recipe-card bg-white rounded-2xl shadow-lg overflow-hidden animate-slide-up" style="animation-delay: {{ $index * 0.1 }}s;">
-                        
-                        <!-- Image de la recette -->
-                        <div class="relative h-56 overflow-hidden">
-                            @if($recette->image)
-                                <img 
-                                    src="{{ asset('images/' . $recette->image) }}" 
-                                    alt="{{ $recette->titre }}"
-                                    class="w-full h-full object-cover"
-                                >
-                            @else
-                                <div class="image-placeholder w-full h-full flex items-center justify-center">
-                                    <i class="fas fa-utensils text-white text-6xl opacity-50"></i>
-                                </div>
-                            @endif
+            <div id="recipes-container"
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                            <!-- Badge catégorie -->
-                            <div class="absolute top-4 right-4">
-                                <span class="badge text-white px-4 py-2 rounded-full text-xs font-semibold shadow-lg flex items-center space-x-1">
-                                    <i class="fas fa-tag"></i>
-                                    <span>{{ $recette->categorie->titre ?? 'Non définie' }}</span>
-                                </span>
-                            </div>
+                @include('recettes.partials.cards', ['recettes' => $recettes])
 
-                            <!-- Overlay au hover -->
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
-                        </div>
-
-                        <!-- Contenu de la carte -->
-                        <div class="p-6">
-                            <!-- Titre -->
-                            <h3 class="text-xl font-bold text-gray-800 mb-3 line-clamp-2 hover:text-orange-500 transition-colors">
-                                {{ $recette->titre }}
-                            </h3>
-
-                            <!-- Description -->
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                                {{ \Illuminate\Support\Str::limit($recette->description, 16) }}
-                            </p>
-
-                            <!-- Séparateur -->
-                            <div class="border-t border-gray-100 my-4"></div>
-
-                            <!-- Footer de la carte -->
-                            <div class="flex items-center justify-between">
-                                <!-- Stats -->
-                                <div class="flex items-center space-x-4 text-sm text-gray-500">
-                                    <div class="flex items-center space-x-1" title="Commentaires">
-                                        <i class="fas fa-comments text-orange-500"></i>
-                                        <span class="font-medium">{{ $recette->commentaires->count() }}</span>
-                                    </div>
-                                    <div class="flex items-center space-x-1" title="Vues">
-                                        <i class="fas fa-eye text-orange-500"></i>
-                                        <span class="font-medium">{{ rand(0, 999) }}</span>
-                                    </div>
-                                </div>
-
-                                <!-- Bouton -->
-                                <a 
-                                    href="{{ route('recettes.show', $recette->id) }}"
-                                    class="btn-view text-white px-5 py-2 rounded-lg font-semibold text-sm flex items-center space-x-2 shadow"
-                                >
-                                    <span>Voir</span>
-                                    <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Auteur (optionnel) -->
-                        @if(isset($recette->user))
-                        <div class="px-6 pb-4 flex items-center space-x-2 text-sm text-gray-500">
-                            <div class="w-6 h-6 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                                {{ strtoupper(substr($recette->user->name, 0, 1)) }}
-                            </div>
-                            <span>Par <span class="font-semibold text-gray-700">{{ $recette->user->name }}</span></span>
-                        </div>
-                        @endif
-                    </div>
-                @endforeach
             </div>
+
 
             <!-- Pagination (si applicable) -->
             @if(method_exists($recettes, 'links'))
@@ -256,6 +206,26 @@
             </div>
         @endauth
     </div>
+<script>
+const form = document.getElementById('search-form');
+const container = document.getElementById('recipes-container');
+
+let timeout = null;
+
+form.addEventListener('input', () => {
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+        const params = new URLSearchParams(new FormData(form));
+
+        fetch(`{{ route('recettes.search') }}?` + params)
+            .then(res => res.text())
+            .then(html => {
+                container.innerHTML = html;
+            });
+    }, 300);
+});
+</script>
 
 </body>
 </html>
