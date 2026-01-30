@@ -6,8 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Commentaire extends Model
 {
-    protected $fillable = ['commentaire', 'date_commentaire', 'user_id', 'recette_id'];
-
+    protected $fillable = [
+        'content',
+        'user_id',
+        'recette_id'
+    ];
 
     public function user()
     {
