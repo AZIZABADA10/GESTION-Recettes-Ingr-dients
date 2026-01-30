@@ -5,9 +5,9 @@ use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\RecetteController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('recettes.index');
-// });
+Route::get('/', function () {
+    return view('auth.login');
+});
 
 // Route::resource('recettes', RecetteController::class);
 // Route::get('/register',[AuthController::class,'registerForm']);
